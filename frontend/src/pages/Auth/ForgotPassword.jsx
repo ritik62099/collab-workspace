@@ -34,7 +34,7 @@ const ForgotPassword = () => {
 
     setIsLoading(true);
     
-    // Simulate API call - Replace with actual API call when backend is ready
+    
     setTimeout(() => {
       setIsLoading(false);
       setIsSuccess(true);
