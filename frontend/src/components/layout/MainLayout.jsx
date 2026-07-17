@@ -1,17 +1,18 @@
-import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
-import Navbar from "./Navbar";
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
 
 const MainLayout = () => {
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-
-      <div className="flex flex-col flex-1">
-        <Navbar />
-
-        <main className="flex-1 p-6 bg-gray-100">
-          <Outlet />
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-green-50">
+      <Navbar />
+      <div className="flex">
+        <Sidebar />
+        <main className="flex-1 overflow-x-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

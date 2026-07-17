@@ -1,124 +1,58 @@
-import { NavLink } from "react-router-dom";
-import {
-  LayoutDashboard,
-  BriefcaseBusiness,
-  KanbanSquare,
-  Bell,
-  Settings,
-  UserCircle2,
-  LogOut,
-  Search,
-  MemoryStick,
-  CheckSquare,
-  User,
-} from "lucide-react";
-
-const menuItems = [
-  {
-    title: "Dashboard",
-    path: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Workspaces",
-    path: "/workspaces",
-    icon: BriefcaseBusiness,
-  },
-  {
-    title: "Boards",
-    path: "/boards",
-    icon: KanbanSquare,
-  },
-  {
-    title: "My Tasks",
-    path: "/mytasks",
-    icon: CheckSquare,
-  },
-  {
-    title: "Notifications",
-    path: "/notifications",
-    icon: Bell,
-  },
-  {
-    title: "Search",
-    path: "/search",
-    icon: Search,
-  },
-  {
-    title: "Members",
-    path: "/members",
-    icon: User,
-  },
-  {
-    title: "Settings",
-    path: "/settings",
-    icon: Settings,
-  },
-];
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { ROUTES } from '../../config/routes';
 
 const Sidebar = () => {
+  const navItems = [
+    {
+      name: 'Dashboard',
+      path: ROUTES.DASHBOARD,
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      ),
+    },
+    {
+      name: 'Workspaces',
+      path: ROUTES.WORKSPACES,
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      ),
+    },
+  ];
+
   return (
-    <aside className="flex flex-col w-64 h-screen bg-white border-r border-gray-200">
-      {/* Logo */}
-      <div className="px-6 py-5 border-b border-gray-200">
-        <h1 className="text-2xl font-bold text-blue-600">
-          CollabSpace
-        </h1>
+    <aside className="hidden lg:flex lg:flex-shrink-0">
+      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                  isActive
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`
+              }
+            >
+              {item.icon}
+              <span className="font-medium">{item.name}</span>
+            </NavLink>
+          ))}
+        </nav>
 
-        <p className="mt-1 text-sm text-gray-500">
-          Real-Time Workspace
-        </p>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 px-4 py-6">
-
-        <div className="space-y-2">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
-                    isActive
-                      ? "bg-blue-50 text-blue-600 shadow-sm"
-                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                  }`
-                }
-              >
-                <Icon size={20} />
-                <span>{item.title}</span>
-              </NavLink>
-            );
-          })}
-        </div>
-      </nav>
-
-      {/* User Section */}
-      <div className="p-4 border-t border-gray-200">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
-            <UserCircle2 size={28} className="text-blue-600" />
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-gray-800">
-              Sohel Shaikh
-            </h3>
-
-            <p className="text-xs text-gray-500">
-              Workspace Admin
-            </p>
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-200">
+          <div className="bg-gradient-to-br from-orange-100 to-green-100 rounded-lg p-4">
+            <p className="text-xs font-semibold text-gray-700 mb-1">🇮🇳 Made in India</p>
+            <p className="text-xs text-gray-600">Building the future of collaboration</p>
           </div>
         </div>
-
-        <button className="flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-medium text-red-600 transition border border-red-200 rounded-xl hover:bg-red-50">
-          <LogOut size={18} />
-          Logout
-        </button>
       </div>
     </aside>
   );

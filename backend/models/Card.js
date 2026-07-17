@@ -18,5 +18,17 @@ const cardSchema = new mongoose.Schema(
 
 cardSchema.index({ list: 1, order: 1 });
 
+// Virtual for comments
+cardSchema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'card',
+  options: { sort: { createdAt: -1 } }
+});
+
+// Ensure virtuals are included in toJSON and toObject
+cardSchema.set('toJSON', { virtuals: true });
+cardSchema.set('toObject', { virtuals: true });
+
 const Card = mongoose.model('Card', cardSchema);
 export default Card;

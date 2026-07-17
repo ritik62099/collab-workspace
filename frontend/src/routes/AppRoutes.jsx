@@ -14,13 +14,9 @@ import ForgotPassword from "../pages/Auth/ForgotPassword";
 
 // Protected Pages
 import Dashboard from "../pages/Dashboard/Dashboard";
-import Workspaces from "../pages/Workspace/WorkspaceList";
-import Boards from "../pages/Board/BoardDetails";
-import MyTasks from "../pages/MyTasks/MyTasks";
-import Members from "../pages/Members/Members";
-import Search from "../pages/Search/SearchResults";
-import Notifications from "../pages/Notifications/Notifications";
-import Settings from "../pages/Settings/Settings";
+import WorkspaceList from "../pages/Workspace/WorkspaceList";
+import WorkspaceDetail from "../pages/Workspace/WorkspaceDetail";
+import BoardView from "../pages/Board/BoardView";
 
 const AppRoutes = () => {
   return (
@@ -29,7 +25,7 @@ const AppRoutes = () => {
         {/* Redirect root */}
         <Route
           path={ROUTES.HOME}
-          element={<Navigate to={ROUTES.LOGIN} replace />}
+          element={<Navigate to={ROUTES.DASHBOARD} replace />}
         />
 
         {/* Public Routes */}
@@ -51,39 +47,21 @@ const AppRoutes = () => {
             />
             <Route
               path={ROUTES.WORKSPACES}
-              element={<Workspaces />}
+              element={<WorkspaceList />}
             />
             <Route
-              path={ROUTES.BOARDS}
-              element={<Boards />}
-            />
-            <Route
-              path={ROUTES.MY_TASKS}
-              element={<MyTasks />}
-            />
-            <Route
-              path={ROUTES.MEMBERS}
-              element={<Members />}
-            />
-            <Route
-              path={ROUTES.SEARCH}
-              element={<Search />}
-            />
-            <Route
-              path={ROUTES.NOTIFICATIONS}
-              element={<Notifications />}
-            />
-            <Route
-              path={ROUTES.SETTINGS}
-              element={<Settings />}
+              path={ROUTES.WORKSPACE}
+              element={<WorkspaceDetail />}
             />
           </Route>
+          {/* Board View without MainLayout (full screen) */}
+          <Route path={ROUTES.BOARD} element={<BoardView />} />
         </Route>
 
         {/* 404 */}
         <Route
           path="*"
-          element={<Navigate to={ROUTES.LOGIN} replace />}
+          element={<Navigate to={ROUTES.DASHBOARD} replace />}
         />
       </Routes>
     </BrowserRouter>
