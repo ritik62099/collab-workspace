@@ -17,15 +17,15 @@ const Dashboard = () => {
   return (
     <div>
       {/* Welcome Section */}
-      <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+      <div className="p-8 mb-8 bg-white shadow-lg rounded-2xl">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            <h2 className="mb-2 text-3xl font-bold text-gray-900">
               Namaste, {user?.name || 'User'}! 🙏
             </h2>
             <p className="text-gray-600">Welcome to your dashboard</p>
           </div>
-          <div className="bg-gradient-to-br from-orange-500 to-green-600 text-white px-6 py-3 rounded-xl shadow-md">
+          <div className="px-6 py-3 text-white shadow-md bg-gradient-to-br from-orange-500 to-green-600 rounded-xl">
             <p className="text-sm font-medium">Active User</p>
             <p className="text-xs opacity-90">{user?.email}</p>
           </div>
@@ -33,9 +33,9 @@ const Dashboard = () => {
       </div>
 
       {/* Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-3">
         <div 
-          className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
+          className="p-6 text-white transition-shadow shadow-lg cursor-pointer bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl hover:shadow-xl"
           onClick={() => navigate(ROUTES.WORKSPACES)}
         >
           <div className="flex items-center justify-between mb-4">
@@ -45,10 +45,10 @@ const Dashboard = () => {
             </svg>
           </div>
           <p className="text-3xl font-bold">{workspaces?.length || 0}</p>
-          <p className="text-sm opacity-90 mt-1">View all workspaces →</p>
+          <p className="mt-1 text-sm opacity-90">View all workspaces →</p>
         </div>
 
-        <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-xl p-6 text-white shadow-lg">
+        <div className="p-6 text-white shadow-lg bg-gradient-to-br from-green-600 to-green-700 rounded-xl">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Boards</h3>
             <svg className="w-8 h-8 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -56,10 +56,10 @@ const Dashboard = () => {
             </svg>
           </div>
           <p className="text-3xl font-bold">0</p>
-          <p className="text-sm opacity-90 mt-1">Across all workspaces</p>
+          <p className="mt-1 text-sm opacity-90">Across all workspaces</p>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
+        <div className="p-6 text-white shadow-lg bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Tasks</h3>
             <svg className="w-8 h-8 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -67,16 +67,16 @@ const Dashboard = () => {
             </svg>
           </div>
           <p className="text-3xl font-bold">0</p>
-          <p className="text-sm opacity-90 mt-1">Kanban coming soon</p>
+          <p className="mt-1 text-sm opacity-90">Kanban coming soon</p>
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h3>
+      {/* <div className="p-8 mb-8 bg-white shadow-lg rounded-2xl">
+        <h3 className="mb-4 text-xl font-bold text-gray-900">Quick Actions</h3>
         <div className="flex flex-wrap gap-3">
           <Button variant="primary" onClick={() => navigate(ROUTES.WORKSPACES)}>
-            <svg className="w-5 h-5 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="inline w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             Create Workspace
@@ -85,17 +85,17 @@ const Dashboard = () => {
             View All Workspaces
           </Button>
         </div>
-      </div>
+      </div> */}
 
       {/* Status Message */}
-      <div className="bg-gradient-to-r from-orange-100 to-green-100 border-l-4 border-orange-500 rounded-lg p-6">
+      {/* <div className="p-6 border-l-4 border-orange-500 rounded-lg bg-gradient-to-r from-orange-100 to-green-100">
         <div className="flex items-start">
-          <svg className="w-6 h-6 text-orange-600 mr-3 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="flex-shrink-0 w-6 h-6 mt-1 mr-3 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

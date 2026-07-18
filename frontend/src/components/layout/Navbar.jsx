@@ -1,75 +1,63 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import useAuthStore from '../../store/useAuthStore';
-import Avatar from '../common/Avatar';
-import Dropdown, { DropdownItem } from '../common/Dropdown';
-import { ROUTES } from '../../config/routes';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Search, Bell , Plus, Settings, ChevronDown } from "lucide-react";
+
+import useAuthStore from "../../store/useAuthStore";
+import Avatar from "../common/Avatar";
+import { ROUTES } from "../../config/routes";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
-
-  const handleLogout = () => {
-    logout();
-    navigate(ROUTES.LOGIN);
-  };
+  const { user } = useAuthStore();
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
-      <div className="px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 via-white to-green-600 rounded-full flex items-center justify-center shadow-md">
-              <span className="text-lg font-bold text-orange-600">CS</span>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">CollabSpace</h1>
-              <p className="text-xs text-gray-500">Made in India 🇮🇳</p>
-            </div>
-          </div>
+    <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
+      <div className="flex items-center justify-between h-16 px-6">
+        {/* Search */}
+        <div className="flex justify-center flex-1 px-8">
+          <div className="w-full max-w-2xl">
+            <div className="flex items-center px-4 py-2 transition border border-gray-200 rounded-xl bg-gray-50 focus-within:border-orange-500 focus-within:bg-white">
+              <Search size={18} className="mr-3 text-gray-400" />
 
-          {/* Right side */}
-          <div className="flex items-center space-x-4">
-            {/* User Menu */}
-            <Dropdown
-              align="right"
-              trigger={
-                <button className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-                  <Avatar src={user?.avatar} alt={user?.name} size="md" />
-                  <div className="hidden md:block text-left">
-                    <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                    <p className="text-xs text-gray-500">{user?.email}</p>
-                  </div>
-                  <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-              }
-            >
-              <DropdownItem
-                onClick={() => navigate(ROUTES.PROFILE)}
-                icon={({ className }) => (
-                  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                )}
-              >
-                Profile
-              </DropdownItem>
-              <DropdownItem
-                onClick={handleLogout}
-                danger
-                icon={({ className }) => (
-                  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                )}
-              >
-                Logout
-              </DropdownItem>
-            </Dropdown>
+              <input
+                type="text"
+                placeholder="Search workspaces, boards, tasks..."
+                className="w-full text-sm bg-transparent outline-none placeholder:text-gray-400"
+              />
+            </div>
           </div>
+        </div>
+
+        {/* Right */}
+        <div className="flex items-center gap-3">
+          {/* Quick Create */}
+          <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white transition bg-orange-500 rounded-xl hover:bg-orange-600">
+            <Plus size={18} />
+            Create
+          </button>
+
+          {/* Notifications */}
+          <button onClick={() => navigate(ROUTES.NOTIFICATIONS)} className="relative p-2 transition rounded-xl hover:bg-gray-100">
+            <Bell size={20} />
+
+            <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-red-500"></span>
+          </button>
+
+          {/* Settings */}
+          <button
+            onClick={() => navigate(ROUTES.SETTINGS)}
+            className="p-2 transition rounded-xl hover:bg-gray-100"
+          >
+            <Settings size={20} />
+          </button>
+
+          {/* User */}
+          <button
+            onClick={() => navigate(ROUTES.PROFILE)}
+            className="transition-all duration-200 rounded-full hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+          >
+            <Avatar src={user?.avatar} alt={user?.name} size="md" />
+          </button>
         </div>
       </div>
     </header>
