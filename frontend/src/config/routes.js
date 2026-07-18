@@ -1,38 +1,31 @@
 export const ROUTES = {
-  // Public Routes
-  HOME: "/",
-  LOGIN: "/login",
-  REGISTER: "/register",
-  FORGOT_PASSWORD: "/forgot-password",
+  // Public routes
+  LOGIN: '/login',
+  REGISTER: '/register',
+  FORGOT_PASSWORD: '/forgot-password',
 
-  // Dashboard
-  DASHBOARD: "/dashboard",
+  // Private routes
+  DASHBOARD: '/dashboard',
+  WORKSPACES: '/workspaces',
+  WORKSPACE_SETTINGS: '/workspaces/:id/settings',
+  INVITE_MEMBERS: '/workspaces/:id/invite',
 
-  // Workspace
-  WORKSPACES: "/workspaces",
-  WORKSPACE: "/workspace/:id",
-  WORKSPACE_DETAIL: (id) => `/workspace/${id}`,
+  // Board routes
+  BOARD: '/board/:id',
+  BOARD_SETTINGS: '/board/:id/settings',
+  BOARD_DETAILS: '/board/:id/details',
 
-  // Board
-  BOARDS: "/boards",
-  BOARD: "/board/:id",
-  BOARD_DETAIL: (id) => `/board/${id}`,
+  // Profile routes
+  PROFILE: '/profile',
+  SETTINGS: '/settings',
 
-  // Tasks
-  MY_TASKS: "/my-tasks",
+  // Other routes
+  SEARCH: '/search',
+  NOTIFICATIONS: '/notifications',
 
-  // Search
-  SEARCH: "/search",
-
-  // Members
-  MEMBERS: "/members",
-
-  // Notifications
-  NOTIFICATIONS: "/notifications",
-
-  // Settings
-  SETTINGS: "/settings",
-
-  // Profile
-  PROFILE: "/profile",
+  // Error routes
+  NOT_FOUND: '*',
+  SERVER_ERROR: '/error',
 };
+
+export default ROUTES;

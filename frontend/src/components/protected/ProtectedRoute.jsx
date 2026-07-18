@@ -1,25 +1,20 @@
-import React, { useEffect } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import useAuthStore from '../../store/useAuthStore';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuthStore } from '../../store/useAuthStore';
 import Loader from '../common/Loader';
-import { ROUTES } from '../../config/routes';
 
-const ProtectedRoute = () => {
-  const { isAuthenticated, isLoading, initAuth } = useAuthStore();
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuthStore();
 
-  useEffect(() => {
-    initAuth();
-  }, [initAuth]);
-
-  if (isLoading) {
-    return <Loader fullScreen message="Loading..." />;
+  if (loading) {
+    return <Loader fullScreen />;
   }
 
   if (!isAuthenticated) {
-    return <Navigate to={ROUTES.LOGIN} replace />;
+    return <Navigate to="/login" replace />;
   }
 
-  return <Outlet />;
+  return children;
 };
 
 export default ProtectedRoute;

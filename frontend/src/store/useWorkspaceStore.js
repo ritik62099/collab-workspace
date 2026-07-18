@@ -1,79 +1,59 @@
 import { create } from 'zustand';
 import { workspaceService } from '../services/workspaceService';
 
-const useWorkspaceStore = create((set, get) => ({
+export const useWorkspaceStore = create((set) => ({
   workspaces: [],
   currentWorkspace: null,
-  isLoading: false,
+  loading: false,
   error: null,
 
   // Fetch all workspaces
   fetchWorkspaces: async () => {
+    set({ loading: true });
     try {
-      set({ isLoading: true, error: null });
-      const data = await workspaceService.getWorkspaces();
-      set({ workspaces: data.workspaces, isLoading: false });
+      const data = await workspaceService.getAll();
+      set({ workspaces: data.workspaces, loading: false });
     } catch (error) {
-      set({ 
-        error: error.response?.data?.message || 'Failed to fetch workspaces', 
-        isLoading: false 
-      });
+      set({ error: error.message, loading: false });
     }
   },
 
-  // Fetch workspace by ID
+  // Get workspace by ID
   fetchWorkspaceById: async (id) => {
+    set({ loading: true });
     try {
-      set({ isLoading: true, error: null });
-      const data = await workspaceService.getWorkspaceById(id);
-      set({ currentWorkspace: data.workspace, isLoading: false });
-      return data.workspace;
+      const data = await workspaceService.getById(id);
+      set({ currentWorkspace: data.workspace, loading: false });
     } catch (error) {
-      set({ 
-        error: error.response?.data?.message || 'Failed to fetch workspace', 
-        isLoading: false 
-      });
-      throw error;
+      set({ error: error.message, loading: false });
     }
   },
 
   // Create workspace
-  createWorkspace: async (workspaceData) => {
+  createWorkspace: async (data) => {
     try {
-      set({ isLoading: true, error: null });
-      const data = await workspaceService.createWorkspace(workspaceData);
-      set((state) => ({
-        workspaces: [data.workspace, ...state.workspaces],
-        isLoading: false,
+      const res = await workspaceService.create(data);
+      set((state) => ({ 
+        workspaces: [res.workspace, ...state.workspaces] 
       }));
-      return data.workspace;
+      return res;
     } catch (error) {
-      set({ 
-        error: error.response?.data?.message || 'Failed to create workspace', 
-        isLoading: false 
-      });
       throw error;
     }
   },
 
   // Update workspace
-  updateWorkspace: async (id, workspaceData) => {
+  updateWorkspace: async (id, data) => {
     try {
-      set({ isLoading: true, error: null });
-      const data = await workspaceService.updateWorkspace(id, workspaceData);
+      const res = await workspaceService.update(id, data);
       set((state) => ({
-        workspaces: state.workspaces.map((w) =>
-          w._id === id ? data.workspace : w
+        workspaces: state.workspaces.map((ws) => 
+          ws._id === id ? res.workspace : ws
         ),
-        currentWorkspace: state.currentWorkspace?._id === id ? data.workspace : state.currentWorkspace,
-        isLoading: false,
+        currentWorkspace: res.workspace,
       }));
-      return data.workspace;
+      return res;
     } catch (error) {
-      set({ 
-        error: error.response?.data?.message || 'Failed to update workspace', 
-        isLoading: false 
-      });
       throw error;
     }
   },
@@ -81,46 +61,14 @@ const useWorkspaceStore = create((set, get) => ({
   // Delete workspace
   deleteWorkspace: async (id) => {
     try {
-      set({ isLoading: true, error: null });
-      await workspaceService.deleteWorkspace(id);
+      await workspaceService.delete(id);
       set((state) => ({
-        workspaces: state.workspaces.filter((w) => w._id !== id),
-        currentWorkspace: state.currentWorkspace?._id === id ? null : state.currentWorkspace,
-        isLoading: false,
+        workspaces: state.workspaces.filter((ws) => ws._id !== id),
       }));
     } catch (error) {
-      set({ 
-        error: error.response?.data?.message || 'Failed to delete workspace', 
-        isLoading: false 
-      });
       throw error;
     }
   },
 
-  // Join workspace by code
-  joinWorkspace: async (code) => {
-    try {
-      set({ isLoading: true, error: null });
-      const data = await workspaceService.joinByInviteCode(code);
-      set((state) => ({
-        workspaces: [data.workspace, ...state.workspaces],
-        isLoading: false,
-      }));
-      return data.workspace;
-    } catch (error) {
-      set({ 
-        error: error.response?.data?.message || 'Failed to join workspace', 
-        isLoading: false 
-      });
-      throw error;
-    }
-  },
-
-  // Clear error
-  clearError: () => set({ error: null }),
-
-  // Clear current workspace
-  clearCurrentWorkspace: () => set({ currentWorkspace: null }),
+  setCurrentWorkspace: (workspace) => set({ currentWorkspace: workspace }),
 }));
-
-export default useWorkspaceStore;
