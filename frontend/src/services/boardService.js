@@ -1,7 +1,6 @@
 import api from './api';
 
 export const boardService = {
-<<<<<<< HEAD
   // Get boards by workspace
   getByWorkspace: async (workspaceId) => {
     const response = await api.get(`/boards/workspace/${workspaceId}`);
@@ -16,39 +15,17 @@ export const boardService = {
 
   // Create board
   create: async (data) => {
-=======
-  // Create board
-  createBoard: async (data) => {
->>>>>>> 904df03ac2580fd1be6930e493fe28083c48ac6c
     const response = await api.post('/boards', data);
     return response.data;
   },
 
-<<<<<<< HEAD
   // Update board
   update: async (id, data) => {
-=======
-  // Get boards by workspace
-  getBoardsByWorkspace: async (workspaceId) => {
-    const response = await api.get(`/boards/workspace/${workspaceId}`);
-    return response.data;
-  },
-
-  // Get board by ID
-  getBoardById: async (id) => {
-    const response = await api.get(`/boards/${id}`);
-    return response.data;
-  },
-
-  // Update board
-  updateBoard: async (id, data) => {
->>>>>>> 904df03ac2580fd1be6930e493fe28083c48ac6c
     const response = await api.put(`/boards/${id}`, data);
     return response.data;
   },
 
   // Delete board
-<<<<<<< HEAD
   delete: async (id) => {
     const response = await api.delete(`/boards/${id}`);
     return response.data;
@@ -114,10 +91,3 @@ export const boardService = {
 };
 
 export default boardService;
-=======
-  deleteBoard: async (id) => {
-    const response = await api.delete(`/boards/${id}`);
-    return response.data;
-  },
-};
->>>>>>> 904df03ac2580fd1be6930e493fe28083c48ac6c
