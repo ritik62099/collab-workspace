@@ -31,11 +31,9 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ✅ CORRECTED: async function mein 'next' parameter aur next() call hata diya hai
-userSchema.pre('save', async function () {
-  // Sirf tab hash karo jab password modify hua ho
-  if (!this.isModified('password')) return;
-  
+// Password hash karne ka middleware
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });

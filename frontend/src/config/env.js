@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export const env = {
   API_URL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   SOCKET_URL: import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000',
@@ -6,3 +7,10 @@ export const env = {
 };
 
 export default env;
+=======
+export const config = {
+  apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  appName: 'CollabSpace',
+  tokenKey: 'collab_token',
+};
+>>>>>>> 904df03ac2580fd1be6930e493fe28083c48ac6c

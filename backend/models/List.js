@@ -12,5 +12,17 @@ const listSchema = new mongoose.Schema(
 
 listSchema.index({ board: 1, order: 1 });
 
+// Virtual for cards
+listSchema.virtual('cards', {
+  ref: 'Card',
+  localField: '_id',
+  foreignField: 'list',
+  options: { sort: { order: 1 } }
+});
+
+// Ensure virtuals are included in toJSON and toObject
+listSchema.set('toJSON', { virtuals: true });
+listSchema.set('toObject', { virtuals: true });
+
 const List = mongoose.model('List', listSchema);
 export default List;
