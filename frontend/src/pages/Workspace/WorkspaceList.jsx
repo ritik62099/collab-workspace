@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useWorkspaceStore from '../../store/useWorkspaceStore';
+import { useWorkspaceStore } from '../../store/useWorkspaceStore';
 import Button from '../../components/common/Button';
 import Loader from '../../components/common/Loader';
 import Modal from '../../components/common/Modal';
@@ -99,17 +99,17 @@ const WorkspaceList = () => {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Workspaces</h1>
-            <p className="text-gray-600 mt-1">Manage your collaborative workspaces</p>
+            <p className="mt-1 text-gray-600">Manage your collaborative workspaces</p>
           </div>
           <div className="flex space-x-3">
             <Button variant="outline" onClick={() => setShowJoinModal(true)}>
-              <svg className="w-5 h-5 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="inline w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
               Join Workspace
             </Button>
             <Button variant="primary" onClick={() => setShowCreateModal(true)}>
-              <svg className="w-5 h-5 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="inline w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
               Create Workspace
@@ -118,7 +118,7 @@ const WorkspaceList = () => {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+          <div className="px-4 py-3 text-sm text-red-600 border border-red-200 rounded-lg bg-red-50">
             {error}
           </div>
         )}
@@ -126,14 +126,14 @@ const WorkspaceList = () => {
 
       {/* Workspaces Grid */}
       {workspaces.length === 0 ? (
-        <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-          <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="p-12 text-center bg-white shadow-lg rounded-2xl">
+          <div className="flex items-center justify-center w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-orange-100 to-green-100">
             <svg className="w-12 h-12 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">No Workspaces Yet</h3>
-          <p className="text-gray-600 mb-6">Create your first workspace or join an existing one to get started.</p>
+          <h3 className="mb-2 text-xl font-bold text-gray-900">No Workspaces Yet</h3>
+          <p className="mb-6 text-gray-600">Create your first workspace or join an existing one to get started.</p>
           <div className="flex justify-center space-x-3">
             <Button variant="outline" onClick={() => setShowJoinModal(true)}>
               Join Workspace
@@ -144,11 +144,11 @@ const WorkspaceList = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {workspaces.map((workspace) => (
             <div
               key={workspace._id}
-              className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow cursor-pointer border border-gray-200"
+              className="transition-shadow bg-white border border-gray-200 shadow-md cursor-pointer rounded-xl hover:shadow-xl"
             >
               <div className="p-6">
                 <div className="flex items-start justify-between mb-4">
@@ -156,13 +156,13 @@ const WorkspaceList = () => {
                     className="flex-1 cursor-pointer"
                     onClick={() => navigate(`/workspace/${workspace._id}`)}
                   >
-                    <h3 className="text-lg font-bold text-gray-900 mb-1">{workspace.name}</h3>
+                    <h3 className="mb-1 text-lg font-bold text-gray-900">{workspace.name}</h3>
                     <p className="text-sm text-gray-600 line-clamp-2">{workspace.description || 'No description'}</p>
                   </div>
                   <Dropdown
                     align="right"
                     trigger={
-                      <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                      <button className="p-2 transition-colors rounded-lg hover:bg-gray-100">
                         <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                         </svg>
@@ -194,7 +194,7 @@ const WorkspaceList = () => {
                   </Dropdown>
                 </div>
 
-                <div className="border-t border-gray-200 pt-4 mt-4">
+                <div className="pt-4 mt-4 border-t border-gray-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <Avatar src={workspace.owner?.avatar} alt={workspace.owner?.name} size="sm" />
@@ -240,7 +240,7 @@ const WorkspaceList = () => {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block mb-1 text-sm font-medium text-gray-700">
               Description
             </label>
             <textarea
@@ -253,7 +253,7 @@ const WorkspaceList = () => {
             />
           </div>
 
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex justify-end pt-4 space-x-3">
             <Button
               variant="ghost"
               onClick={() => {
@@ -291,9 +291,9 @@ const WorkspaceList = () => {
             required
           />
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="p-4 border border-blue-200 rounded-lg bg-blue-50">
             <div className="flex">
-              <svg className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="flex-shrink-0 w-5 h-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <p className="text-sm text-blue-800">
@@ -302,7 +302,7 @@ const WorkspaceList = () => {
             </div>
           </div>
 
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex justify-end pt-4 space-x-3">
             <Button
               variant="ghost"
               onClick={() => {

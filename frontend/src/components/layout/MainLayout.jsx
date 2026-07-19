@@ -5,16 +5,22 @@ import Sidebar from './Sidebar';
 
 const MainLayout = () => {
   return (
-    <div className="min-h-screen bg-gray-100">
+  <div className="flex h-screen bg-gray-50">
+    {/* Sidebar */}
+    <Sidebar />
+
+    {/* Right Side */}
+    <div className="flex flex-col flex-1 overflow-hidden">
+      {/* Navbar */}
       <Navbar />
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 p-6 overflow-x-hidden">
-          <Outlet />
-        </main>
-      </div>
+
+      {/* Page Content */}
+      <main className="flex-1 p-6 overflow-y-auto">
+        <Outlet />
+      </main>
     </div>
-  );
+  </div>
+);
 };
 
 export default MainLayout;
