@@ -1,29 +1,55 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useBoardStore } from '../../store/useBoardStore';
 import { useSocket } from '../../hooks/useSocket';
 import { useDragAndDrop } from '../../hooks/useDragAndDrop';
+import { SOCKET_EVENTS } from '../../utils/socketEvents';
 import Loader from '../../components/common/Loader';
 import Button from '../../components/common/Button';
+import Input from '../../components/common/Input';
 
 const BoardView = () => {
   const { id } = useParams();
-  const { currentBoard, lists, loading, fetchBoard, addList } = useBoardStore();
+  const { currentBoard, lists, loading, fetchBoard, addList, addCard } = useBoardStore();
   const { onDragEnd } = useDragAndDrop();
+  const { socket } = useSocket(id);
   
-  // Initialize Socket for real-time updates
-  useSocket(id);
+  // List State
+  const [isAddingList, setIsAddingList] = useState(false);
+  const [newListTitle, setNewListTitle] = useState('');
 
-  // State for adding a new list
-  const [isAddingList, setIsAddingList] = React.useState(false);
-  const [newListTitle, setNewListTitle] = React.useState('');
+  // Card State
+  const [addingCardToList, setAddingCardToList] = useState(null); // Stores listId
+  const [newCardTitle, setNewCardTitle] = useState('');
 
   useEffect(() => {
     if (id) {
       fetchBoard(id);
     }
   }, [id]);
+
+  // 🚀 REAL-TIME SOCKET LISTENERS
+  useEffect(() => {
+    if (!socket) return;
+
+    // Jab koi dusra user card move kare
+    socket.on(SOCKET_EVENTS.CARD_MOVED, (data) => {
+      // Hum optimistic update pehle hi kar chuke hain, lekin agar remote user ne kiya toh state sync karo
+      // (Zustand store mein hum baad mein proper sync add kar sakte hain, abhi ke liye fetchBoard se refresh safe hai)
+      fetchBoard(id); 
+    });
+
+    // Jab koi dusra user naya card add kare
+    socket.on(SOCKET_EVENTS.CARD_CREATED, (data) => {
+      fetchBoard(id);
+    });
+
+    return () => {
+      socket.off(SOCKET_EVENTS.CARD_MOVED);
+      socket.off(SOCKET_EVENTS.CARD_CREATED);
+    };
+  }, [socket, id]);
 
   const handleAddList = async (e) => {
     e.preventDefault();
@@ -37,8 +63,26 @@ const BoardView = () => {
     }
   };
 
+  const handleAddCard = async (listId, e) => {
+    e.preventDefault();
+    if (!newCardTitle.trim()) return;
+    try {
+      await addCard({ title: newCardTitle, listId, boardId: id });
+      
+      // Emit Socket Event for Real-time update
+      if (socket) {
+        socket.emit(SOCKET_EVENTS.CARD_CREATED, { boardId: id, listId });
+      }
+
+      setNewCardTitle('');
+      setAddingCardToList(null);
+    } catch (error) {
+      console.error('Failed to add card:', error);
+    }
+  };
+
   if (loading) return <Loader fullScreen />;
-  if (!currentBoard) return <div className="p-10 text-center">Board not found.</div>;
+  if (!currentBoard) return <div className="p-10 text-center text-white">Board not found.</div>;
 
   return (
     <div className="h-[calc(100vh-64px)] overflow-x-auto overflow-y-hidden bg-[#0079BF] p-6">
@@ -63,7 +107,7 @@ const BoardView = () => {
                       {/* List Header */}
                       <div 
                         {...provided.dragHandleProps} 
-                        className="p-3 font-semibold text-gray-700 flex justify-between items-center"
+                        className="p-3 font-semibold text-gray-700 flex justify-between items-center cursor-grab active:cursor-grabbing"
                       >
                         {list.title}
                         <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded-full">
@@ -88,7 +132,7 @@ const BoardView = () => {
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
-                                    className="bg-white p-3 rounded shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                    className="bg-white p-3 rounded shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
                                   >
                                     <p className="text-sm text-gray-800">{card.title}</p>
                                     {card.labels && card.labels.length > 0 && (
@@ -113,12 +157,33 @@ const BoardView = () => {
                         )}
                       </Droppable>
 
-                      {/* Add Card Button (Placeholder for now) */}
-                      <div className="p-2">
-                        <button className="w-full text-left text-sm text-gray-500 hover:bg-gray-200 p-2 rounded transition-colors">
-                          + Add a card
+                      {/* Add Card Form */}
+                      {addingCardToList === list._id ? (
+                        <form onSubmit={(e) => handleAddCard(list._id, e)} className="p-2">
+                          <Input
+                            value={newCardTitle}
+                            onChange={(e) => setNewCardTitle(e.target.value)}
+                            placeholder="Enter a title for this card..."
+                            className="mb-2"
+                            autoFocus
+                          />
+                          <div className="flex space-x-2">
+                            <Button type="submit" size="sm">Add Card</Button>
+                            <Button variant="secondary" size="sm" onClick={() => {
+                              setAddingCardToList(null);
+                              setNewCardTitle('');
+                            }}>Cancel</Button>
+                          </div>
+                        </form>
+                      ) : (
+                        <button
+                          onClick={() => setAddingCardToList(list._id)}
+                          className="w-full text-left text-sm text-gray-500 hover:bg-gray-200 p-2 rounded transition-colors flex items-center space-x-2"
+                        >
+                          <span>+</span>
+                          <span>Add a card</span>
                         </button>
-                      </div>
+                      )}
                     </div>
                   )}
                 </Draggable>
@@ -128,17 +193,19 @@ const BoardView = () => {
               {/* Add New List Form */}
               {isAddingList ? (
                 <form onSubmit={handleAddList} className="bg-gray-100 rounded-lg w-80 flex-shrink-0 p-3">
-                  <input
-                    type="text"
+                  <Input
                     value={newListTitle}
                     onChange={(e) => setNewListTitle(e.target.value)}
                     placeholder="Enter list title..."
-                    className="w-full p-2 border border-gray-300 rounded mb-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="mb-2"
                     autoFocus
                   />
                   <div className="flex space-x-2">
                     <Button type="submit" size="sm">Add List</Button>
-                    <Button variant="secondary" size="sm" onClick={() => setIsAddingList(false)}>Cancel</Button>
+                    <Button variant="secondary" size="sm" onClick={() => {
+                      setIsAddingList(false);
+                      setNewListTitle('');
+                    }}>Cancel</Button>
                   </div>
                 </form>
               ) : (

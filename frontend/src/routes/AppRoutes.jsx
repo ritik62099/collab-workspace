@@ -8,6 +8,7 @@ import Loader from '../components/common/Loader';
 const Login = lazy(() => import('../pages/Auth/Login'));
 const Register = lazy(() => import('../pages/Auth/Register'));
 const Dashboard = lazy(() => import('../pages/Dashboard/Dashboard'));
+const WorkspaceView = lazy(() => import('../pages/Workspace/WorkspaceView'));
 const BoardView = lazy(() => import('../pages/Board/BoardView'));
 const NotFound = lazy(() => import('../pages/Error/NotFound'));
 
@@ -31,6 +32,9 @@ const AppRoutes = () => {
           >
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
+
+            {/* Workspace Route */}
+            <Route path="workspaces/:id" element={<WorkspaceView />} />
             <Route path="board/:id" element={<BoardView />} />
             {/* Add more routes here as we build them */}
           </Route>
