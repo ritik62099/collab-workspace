@@ -8,6 +8,7 @@ import { SOCKET_EVENTS } from '../../utils/socketEvents';
 import Loader from '../../components/common/Loader';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
+import CardDetailsModal from '../../features/kanban/CardDetailsModal';
 
 const BoardView = () => {
   const { id } = useParams();
@@ -23,6 +24,9 @@ const BoardView = () => {
   const [addingCardToList, setAddingCardToList] = useState(null); // Stores listId
   const [newCardTitle, setNewCardTitle] = useState('');
 
+  // ✅ Modal State
+  const [selectedCard, setSelectedCard] = useState(null);
+
   useEffect(() => {
     if (id) {
       fetchBoard(id);
@@ -33,15 +37,11 @@ const BoardView = () => {
   useEffect(() => {
     if (!socket) return;
 
-    // Jab koi dusra user card move kare
-    socket.on(SOCKET_EVENTS.CARD_MOVED, (data) => {
-      // Hum optimistic update pehle hi kar chuke hain, lekin agar remote user ne kiya toh state sync karo
-      // (Zustand store mein hum baad mein proper sync add kar sakte hain, abhi ke liye fetchBoard se refresh safe hai)
+    socket.on(SOCKET_EVENTS.CARD_MOVED, () => {
       fetchBoard(id); 
     });
 
-    // Jab koi dusra user naya card add kare
-    socket.on(SOCKET_EVENTS.CARD_CREATED, (data) => {
+    socket.on(SOCKET_EVENTS.CARD_CREATED, () => {
       fetchBoard(id);
     });
 
@@ -69,7 +69,6 @@ const BoardView = () => {
     try {
       await addCard({ title: newCardTitle, listId, boardId: id });
       
-      // Emit Socket Event for Real-time update
       if (socket) {
         socket.emit(SOCKET_EVENTS.CARD_CREATED, { boardId: id, listId });
       }
@@ -125,13 +124,15 @@ const BoardView = () => {
                               snapshot.isDraggingOver ? 'bg-blue-50' : ''
                             }`}
                           >
-                            {list.cards?.map((card, index) => (
-                              <Draggable key={card._id} draggableId={card._id} index={index}>
+                            {list.cards?.map((card, cardIndex) => (
+                              <Draggable key={card._id} draggableId={card._id} index={cardIndex}>
                                 {(provided) => (
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
+                                    // ✅ YE LINE ADD KI HAI: Card par click karne se modal khulega
+                                    onClick={() => setSelectedCard({ card, listId: list._id })}
                                     className="bg-white p-3 rounded shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
                                   >
                                     <p className="text-sm text-gray-800">{card.title}</p>
@@ -220,6 +221,16 @@ const BoardView = () => {
           )}
         </Droppable>
       </DragDropContext>
+
+      {/* ✅ YE MODAL RENDERING ADD KI HAI: DragDropContext ke bahar lekin main div ke andar */}
+      {selectedCard && (
+        <CardDetailsModal
+          card={selectedCard.card}
+          listId={selectedCard.listId}
+          boardId={id}
+          onClose={() => setSelectedCard(null)}
+        />
+      )}
     </div>
   );
 };

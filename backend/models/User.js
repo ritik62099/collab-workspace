@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
       type: String, 
       required: [true, 'Password is required'], 
       minlength: [6, 'Password must be at least 6 characters'], 
-      select: false // Password response mein nahi bhejenge
+      select: false
     },
     avatar: { type: String, default: '' },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
@@ -31,9 +31,10 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Password hash karne ka middleware
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+// ✅ BILKUL YE HI LIKHA HONA CHAHIYE (Koi 'next' parameter nahi, koi next() call nahi)
+userSchema.pre('save', async function () {
+  if (!this.isModified('password')) return;
+  
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });

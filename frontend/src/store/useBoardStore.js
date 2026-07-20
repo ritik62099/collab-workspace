@@ -130,5 +130,26 @@ export const useBoardStore = create((set, get) => ({
     }
   },
 
+    // Add Comment to a Card
+  addComment: async (cardId, text) => {
+    try {
+      const res = await boardService.addComment(cardId, text);
+      // Update local state to show comment immediately
+      set((state) => ({
+        lists: state.lists.map((list) => ({
+          ...list,
+          cards: list.cards.map((card) => 
+            card._id === cardId 
+              ? { ...card, comments: [...(card.comments || []), res.comment] }
+              : card
+          ),
+        })),
+      }));
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   setCurrentBoard: (board) => set({ currentBoard: board }),
 }));

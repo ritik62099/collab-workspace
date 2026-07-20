@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import socketService from '../services/socketService';
 
-export const useSocketStore = create((set) => ({
+// ✅ FIX: Yahan (set, get) dono pass kiye hain
+export const useSocketStore = create((set, get) => ({
   socket: null,
   isConnected: false,
   onlineUsers: [],
@@ -23,7 +24,7 @@ export const useSocketStore = create((set) => ({
 
   // Join board room
   joinBoard: (boardId) => {
-    const { socket } = get();
+    const { socket } = get(); // ✅ Ab 'get' kaam karega
     if (socket) {
       socket.emit('join-board', boardId);
     }
@@ -31,7 +32,7 @@ export const useSocketStore = create((set) => ({
 
   // Leave board room
   leaveBoard: (boardId) => {
-    const { socket } = get();
+    const { socket } = get(); // ✅ Ab 'get' kaam karega
     if (socket) {
       socket.emit('leave-board', boardId);
     }
