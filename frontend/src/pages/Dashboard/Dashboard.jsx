@@ -62,10 +62,10 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {workspaces.map((ws) => (
             <Link 
-              key={ws._id} 
-              to={`/workspace/${ws._id}`} // We will create this route later, for now it's a placeholder
-              className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100"
-            >
+  key={ws._id} 
+  to={`/workspaces/${ws._id}`} // ✅ 's' laga do (workspaces)
+  className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100"
+>
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center text-white font-bold">
                   {ws.name.charAt(0)}
