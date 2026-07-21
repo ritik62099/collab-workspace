@@ -126,9 +126,9 @@ const WorkspaceDetail = () => {
 
   if (!currentWorkspace) {
     return (
-      <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-        <h3 className="text-xl font-bold text-gray-900 mb-2">Workspace Not Found</h3>
-        <p className="text-gray-600 mb-6">The workspace you're looking for doesn't exist.</p>
+      <div className="p-12 text-center bg-white shadow-lg rounded-2xl">
+        <h3 className="mb-2 text-xl font-bold text-gray-900">Workspace Not Found</h3>
+        <p className="mb-6 text-gray-600">The workspace you're looking for doesn't exist.</p>
         <Button variant="primary" onClick={() => navigate('/workspaces')}>
           Back to Workspaces
         </Button>
@@ -139,13 +139,13 @@ const WorkspaceDetail = () => {
   return (
     <div>
       {/* Header */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+      <div className="p-6 mb-8 bg-white shadow-lg rounded-2xl">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center space-x-3 mb-3">
+            <div className="flex items-center mb-3 space-x-3">
               <button
                 onClick={() => navigate('/workspaces')}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 transition-colors rounded-lg hover:bg-gray-100"
               >
                 <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -159,7 +159,7 @@ const WorkspaceDetail = () => {
           <Dropdown
             align="right"
             trigger={
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <button className="p-2 transition-colors rounded-lg hover:bg-gray-100">
                 <svg className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                 </svg>
@@ -201,7 +201,7 @@ const WorkspaceDetail = () => {
         </div>
 
         {/* Members */}
-        <div className="border-t border-gray-200 mt-6 pt-6">
+        <div className="pt-6 mt-6 border-t border-gray-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <h3 className="text-sm font-semibold text-gray-700">Members</h3>
@@ -216,7 +216,7 @@ const WorkspaceDetail = () => {
                   />
                 ))}
                 {currentWorkspace.members?.length > 5 && (
-                  <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-medium text-gray-600 ring-2 ring-white">
+                  <div className="flex items-center justify-center w-8 h-8 text-xs font-medium text-gray-600 bg-gray-200 rounded-full ring-2 ring-white">
                     +{currentWorkspace.members.length - 5}
                   </div>
                 )}
@@ -225,12 +225,12 @@ const WorkspaceDetail = () => {
             {currentWorkspace.inviteCode && (
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-gray-600">Invite Code:</span>
-                <code className="bg-gray-100 px-3 py-1 rounded text-sm font-mono text-orange-600">
+                <code className="px-3 py-1 font-mono text-sm text-orange-600 bg-gray-100 rounded">
                   {currentWorkspace.inviteCode}
                 </code>
                 <button
                   onClick={copyInviteCode}
-                  className="p-1 hover:bg-gray-100 rounded transition-colors"
+                  className="p-1 transition-colors rounded hover:bg-gray-100"
                 >
                   <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -247,7 +247,7 @@ const WorkspaceDetail = () => {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Boards</h2>
           <Button variant="primary" onClick={() => setShowCreateBoardModal(true)}>
-            <svg className="w-5 h-5 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="inline w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             Create Board
@@ -259,20 +259,20 @@ const WorkspaceDetail = () => {
             <Loader size="md" message="Loading boards..." />
           </div>
         ) : boards.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-            <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="p-12 text-center bg-white shadow-lg rounded-2xl">
+            <div className="flex items-center justify-center w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-orange-100 to-green-100">
               <svg className="w-12 h-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">No Boards Yet</h3>
-            <p className="text-gray-600 mb-6">Create your first board to start organizing tasks.</p>
+            <h3 className="mb-2 text-xl font-bold text-gray-900">No Boards Yet</h3>
+            <p className="mb-6 text-gray-600">Create your first board to start organizing tasks.</p>
             <Button variant="primary" onClick={() => setShowCreateBoardModal(true)}>
               Create Board
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {boards.map((board) => (
               <BoardCard
                 key={board._id}
@@ -308,7 +308,7 @@ const WorkspaceDetail = () => {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block mb-1 text-sm font-medium text-gray-700">
               Description
             </label>
             <textarea
@@ -320,7 +320,7 @@ const WorkspaceDetail = () => {
             />
           </div>
 
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex justify-end pt-4 space-x-3">
             <Button
               variant="ghost"
               onClick={() => {
@@ -363,7 +363,7 @@ const WorkspaceDetail = () => {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block mb-1 text-sm font-medium text-gray-700">
               Description
             </label>
             <textarea
@@ -377,7 +377,7 @@ const WorkspaceDetail = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block mb-2 text-sm font-medium text-gray-700">
               Background Color
             </label>
             <div className="flex space-x-2">
@@ -395,7 +395,7 @@ const WorkspaceDetail = () => {
             </div>
           </div>
 
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex justify-end pt-4 space-x-3">
             <Button
               variant="ghost"
               onClick={() => {

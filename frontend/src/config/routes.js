@@ -1,31 +1,64 @@
 export const ROUTES = {
-  // Public routes
-  LOGIN: '/login',
-  REGISTER: '/register',
-  FORGOT_PASSWORD: '/forgot-password',
+  // =========================
+  // Public Routes
+  // =========================
+  HOME: "/",
+  LOGIN: "/login",
+  REGISTER: "/register",
+  FORGOT_PASSWORD: "/forgot-password",
 
-  // Private routes
-  DASHBOARD: '/dashboard',
-  WORKSPACES: '/workspaces',
-  WORKSPACE_SETTINGS: '/workspaces/:id/settings',
-  INVITE_MEMBERS: '/workspaces/:id/invite',
+  // =========================
+  // Dashboard
+  // =========================
+  DASHBOARD: "/dashboard",
 
-  // Board routes
-  BOARD: '/board/:id',
-  BOARD_SETTINGS: '/board/:id/settings',
-  BOARD_DETAILS: '/board/:id/details',
+  // =========================
+  // Workspace
+  // =========================
+  WORKSPACES: "/workspaces",
+  WORKSPACE: "/workspaces/:id",
+  WORKSPACE_DETAILS: (id) => `/workspaces/${id}`,
+  WORKSPACE_SETTINGS: "/workspaces/:id/settings",
+  INVITE_MEMBERS: "/workspaces/:id/invite",
 
-  // Profile routes
-  PROFILE: '/profile',
-  SETTINGS: '/settings',
+  // =========================
+  // Board
+  // =========================
+  BOARD: "/board/:id",
+  BOARD_DETAILS: (id) => `/board/${id}`,
+  BOARD_SETTINGS: "/board/:id/settings",
 
-  // Other routes
-  SEARCH: '/search',
-  NOTIFICATIONS: '/notifications',
+  // =========================
+  // Tasks
+  // =========================
+  MY_TASKS: "/my-tasks",
 
-  // Error routes
-  NOT_FOUND: '*',
-  SERVER_ERROR: '/error',
+  // =========================
+  // Members
+  // =========================
+  MEMBERS: "/members",
+
+  // =========================
+  // Search
+  // =========================
+  SEARCH: "/search",
+
+  // =========================
+  // Notifications
+  // =========================
+  NOTIFICATIONS: "/notifications",
+
+  // =========================
+  // Profile
+  // =========================
+  PROFILE: "/profile",
+  SETTINGS: "/settings",
+
+  // =========================
+  // Error
+  // =========================
+  SERVER_ERROR: "/error",
+  NOT_FOUND: "*",
 };
 
 export default ROUTES;
