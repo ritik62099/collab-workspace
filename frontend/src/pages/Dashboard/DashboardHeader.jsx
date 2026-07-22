@@ -1,7 +1,7 @@
 import React from "react";
 
 const DashboardHeader = ( { user } ) => {
-//   const userName = "Sohel";
+
 
   const getGreeting = () => {
     const hour = new Date().getHours();
