@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useSocketStore } from '../store/useSocketStore';
+import { useSocketStore } from '../../store/useSocketStore';
 
 export const useSocket = (boardId = null) => {
   const { socket, isConnected, initSocket, disconnectSocket, joinBoard, leaveBoard } = useSocketStore();

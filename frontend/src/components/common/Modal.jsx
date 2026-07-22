@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useOutsideClick } from '../../hooks/useOutsideClick';
+import { useOutsideClick } from '../../pages/hooks/useOutsideClick';
 
 const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
   const modalRef = useRef(null);

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useBoardStore } from '../store/useBoardStore';
+import { useBoardStore } from '../../store/useBoardStore';
 
 export const useDragAndDrop = () => {
   const { moveCard } = useBoardStore();

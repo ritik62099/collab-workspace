@@ -2,13 +2,12 @@ import { registerUser, loginUser } from '../services/authService.js';
 import User from '../models/User.js';
 import { AppError } from '../utils/errorHandler.js';
 
-// @desc    Register new user
-// @route   POST /api/auth/register
 export const register = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    // ✅ workspaceId aur inviteCode ko bhi extract karo
+    const { name, email, password, workspaceId, inviteCode } = req.body;
 
-    const result = await registerUser({ name, email, password });
+    const result = await registerUser({ name, email, password, workspaceId, inviteCode });
 
     res.status(201).json({
       success: true,

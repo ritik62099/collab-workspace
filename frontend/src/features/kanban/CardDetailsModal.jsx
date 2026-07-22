@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSocket } from '../../hooks/useSocket';
+import { useSocket } from '../../pages/hooks/useSocket';
 import { useBoardStore } from '../../store/useBoardStore';
 import { SOCKET_EVENTS } from '../../utils/socketEvents';
 import { formatters } from '../../utils/formatters';

@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { dashboardService } from "../../services/dashboardService";
+import Loader from "../../components/common/Loader";
 import { useAuthStore } from "../../store/useAuthStore";
-import { useWorkspaceStore } from "../../store/useWorkspaceStore";
-import Button from "../../components/common/Button";
-import { ROUTES } from "../../config/routes";
 
 import DashboardHeader from "./DashboardHeader";
 import StatsCards from "./StatsCards";
@@ -14,42 +12,48 @@ import TaskStatusChart from "./TaskStatusChart";
 import UpcomingDeadlines from "./UpcomingDeadlines";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { workspaces, fetchWorkspaces } = useWorkspaceStore();
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchWorkspaces();
-  }, [fetchWorkspaces]);
+    const fetchData = async () => {
+      try {
+        const response = await dashboardService.getStats();
+        setData(response);
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
-  const dashboard = {
-    totalWorkspaces: 12,
-    activeBoards: 28,
-    myTasks: 17,
-    members: 35,
-  };
+  if (loading) return <Loader fullScreen />;
+  if (!data) return <div className="p-10 text-center">Failed to load dashboard.</div>;
 
   return (
-    <>
+    <div className="space-y-6">
       <DashboardHeader user={user} />
+      <StatsCards dashboard={data.stats} />
 
-      <StatsCards dashboard={dashboard} />
-
-      <div className="grid grid-cols-1 gap-6 mt-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-1">
-          <RecentActivity />
+          <RecentActivity activities={data.recentActivity} />
         </div>
         <div className="lg:col-span-2">
-          <MyAssignedTasks />
+          <MyAssignedTasks tasks={data.upcomingDeadlines.slice(0, 4)} /> 
+          {/* Using upcoming deadlines as assigned tasks for now, or you can pass all myCards */}
         </div>
       </div>
       
-      <div className="grid grid-cols-1 gap-6 mt-6 xl:grid-cols-3">
-        <WorkspaceOverview />
-        <TaskStatusChart />
-        <UpcomingDeadlines />
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+        <WorkspaceOverview workspaces={data.workspaces} />
+        <TaskStatusChart data={data.taskStatus} />
+        <UpcomingDeadlines deadlines={data.upcomingDeadlines} />
       </div>
-    </>
+    </div>
   );
 };
 

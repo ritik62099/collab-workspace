@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'; // ✅ useSearchParams add karo
 import { useAuthStore } from '../../store/useAuthStore';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import Loader from '../../components/common/Loader';
 
 const Register = () => {
+  const [searchParams] = useSearchParams(); // ✅ URL params read karo
+  const workspaceId = searchParams.get('workspaceId');
+  const inviteCode = searchParams.get('inviteCode');
+
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const { register, loading, error, clearError } = useAuthStore();
   const navigate = useNavigate();
@@ -18,8 +22,18 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await register(formData);
-      navigate('/dashboard'); // Register successful, go to dashboard
+      await register({ 
+        ...formData, 
+        workspaceId,   // ✅ Backend ko bhejo
+        inviteCode     // ✅ Backend ko bhejo
+      });
+      
+      // Register ke baad seedha us workspace par le jao
+      if (workspaceId) {
+        navigate(`/workspace/${workspaceId}`);
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       console.error('Registration failed:', err);
     }
@@ -28,6 +42,15 @@ const Register = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        
+        {/* ✅ Invite Banner */}
+        {workspaceId && inviteCode && (
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
+            <h3 className="text-blue-800 font-semibold">You've been invited! 🎉</h3>
+            <p className="text-sm text-blue-600 mt-1">Create an account to join this workspace.</p>
+          </div>
+        )}
+
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Create Account</h1>
           <p className="text-gray-500 mt-1">Join Collab Workspace today</p>
@@ -69,7 +92,7 @@ const Register = () => {
           />
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? <Loader size="sm" /> : 'Create Account'}
+            {loading ? <Loader size="sm" /> : 'Create Account & Join'}
           </Button>
         </form>
 
