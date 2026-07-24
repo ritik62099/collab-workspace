@@ -71,25 +71,29 @@ export const updateProfile = async (req, res, next) => {
   }
 };
 
-// @desc    Change password
+
+
+
+// @desc    Change Password
 // @route   PUT /api/auth/change-password
 export const changePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
-
     const user = await User.findById(req.user._id).select('+password');
+
+    if (!user) throw new AppError('User not found', 404);
+
+    // Check current password
     const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) throw new AppError('Current password is incorrect', 401);
 
-    if (!isMatch) {
-      throw new AppError('Current password is incorrect', 401);
-    }
-
+    // Update password
     user.password = newPassword;
-    await user.save();
+    await user.save(); // pre('save') hook automatically hashes it
 
     res.status(200).json({
       success: true,
-      message: 'Password changed successfully',
+      message: 'Password updated successfully',
     });
   } catch (error) {
     next(error);
