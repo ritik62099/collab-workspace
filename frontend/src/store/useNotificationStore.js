@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { notificationService } from '../services/notificationService';
 
-// ⚠️ DHYAN DO: 'export default' NAHI, 'export const' LIKHA HONA CHAHIYE
+
 export const useNotificationStore = create((set) => ({
   notifications: [],
   unreadCount: 0,
