@@ -79,7 +79,7 @@ const Profile = () => {
         <div className="overflow-hidden bg-white border shadow-sm rounded-3xl border-slate-200">
           {/* ================= Banner ================= */}
 
-          <div className="relative h-56 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500">
+          <div className="relative h-40 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.15),transparent_35%)]" />
 
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(255,255,255,.08),transparent_40%)]" />
@@ -90,11 +90,11 @@ const Profile = () => {
 
             {/* Header Content */}
 
-            <div className="absolute flex items-end gap-6 bottom-10 left-10">
+            <div className="absolute flex items-end gap-6 -bottom-16 left-10">
               {/* Avatar */}
 
               <div className="relative">
-                <div className="h-40 w-40 overflow-hidden rounded-full border-[6px] border-white bg-white shadow-2xl">
+                <div className="h-48 w-48 overflow-hidden rounded-full border-[6px] border-white bg-white shadow-2xl">
                   {user?.avatar ? (
                     <Avatar
                       src={user.avatar}
@@ -120,7 +120,7 @@ const Profile = () => {
 
               {/* User Info */}
 
-              <div className="pb-5 text-white">
+              <div className="self-start pb-5 mt-6 text-white">
                 <div className="flex flex-wrap items-center gap-3">
                   <h2 className="text-4xl font-bold">{user.name}</h2>
 
@@ -141,7 +141,7 @@ const Profile = () => {
 
           {/* ================= White Section ================= */}
 
-          <div className="px-10 pt-20 pb-8">
+          <div className="py-2 pl-12 pr-8">
             <div className="ml-[180px] grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               <InfoCard
                 icon={<CalendarDays size={20} />}
