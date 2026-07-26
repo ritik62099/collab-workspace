@@ -5,6 +5,7 @@ import {
   updateCard,
   moveCard,
   deleteCard,
+  getMyTasks,
 } from '../controllers/cardController.js';
 import { protect } from '../middleware/auth.js';
 
@@ -17,5 +18,7 @@ router
   .put(protect, updateCard)
   .delete(protect, deleteCard);
 router.put('/:id/move', protect, moveCard);
+
+router.get('/my-tasks', protect, getMyTasks);
 
 export default router;

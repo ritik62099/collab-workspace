@@ -164,3 +164,52 @@ export const deleteCard = async (req, res, next) => {
     next(error);
   }
 };
+
+
+
+// @desc    Get all tasks assigned to the logged-in user
+// @route   GET /api/cards/my-tasks
+export const getMyTasks = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+
+    // Find cards where user is in assignees, and populate List -> Board -> Workspace
+    const cards = await Card.find({ 
+      assignees: userId, 
+      isArchived: false 
+    })
+    .populate({
+      path: 'list',
+      select: 'title',
+      populate: {
+        path: 'board',
+        select: 'title workspace',
+        populate: {
+          path: 'workspace',
+          select: 'name'
+        }
+      }
+    })
+    .sort({ dueDate: 1 }); // Due date ke hisaab se sort karo
+
+    // Data ko clean format mein convert karo
+    const tasks = cards.map(card => ({
+      _id: card._id,
+      title: card.title,
+      description: card.description,
+      dueDate: card.dueDate,
+      labels: card.labels,
+      status: card.list?.title || 'Unknown List',
+      board: card.list?.board?.title || 'Unknown Board',
+      workspace: card.list?.board?.workspace?.name || 'Unknown Workspace',
+      boardId: card.list?.board?._id,
+    }));
+
+    res.status(200).json({
+      success: true,
+      tasks,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

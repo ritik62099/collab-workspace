@@ -30,4 +30,12 @@ export const cardService = {
     const response = await api.delete(`/cards/${id}`);
     return response.data;
   },
+
+    // Get tasks assigned to current user
+  getMyTasks: async () => {
+    const response = await api.get('/cards/my-tasks');
+    return response.data;
+  },
 };
+
+
