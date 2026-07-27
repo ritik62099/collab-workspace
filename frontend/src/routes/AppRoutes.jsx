@@ -14,12 +14,8 @@ const ForgotPassword = lazy(() => import("../pages/Auth/ForgotPassword"));
 const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
 
 // Workspace
-const WorkspaceList = lazy(() =>
-  import("../pages/Workspace/WorkspaceList")
-);
-const WorkspaceDetail = lazy(() =>
-  import("../pages/Workspace/WorkspaceDetail")
-);
+const WorkspaceList = lazy(() => import("../pages/Workspace/WorkspaceList"));
+const WorkspaceDetail = lazy(() => import("../pages/Workspace/WorkspaceDetail"));
 
 // Board
 const BoardView = lazy(() => import("../pages/Board/BoardView"));
@@ -27,15 +23,14 @@ const BoardView = lazy(() => import("../pages/Board/BoardView"));
 // Tasks
 const MyTasks = lazy(() => import("../pages/MyTasks/MyTasks"));
 
+// Chat
+const ChatPage = lazy(() => import("../pages/Chat/ChatPage"));
+
 // Search
-const SearchResults = lazy(() =>
-  import("../pages/Search/SearchResults")
-);
+const SearchResults = lazy(() => import("../pages/Search/SearchResults"));
 
 // Notifications
-const Notifications = lazy(() =>
-  import("../pages/Notifications/Notifications")
-);
+const Notifications = lazy(() => import("../pages/Notifications/Notifications"));
 
 // Members
 const Members = lazy(() => import("../pages/Members/Members"));
@@ -76,6 +71,7 @@ const AppRoutes = () => {
             {/* Workspace */}
             <Route path="workspaces" element={<WorkspaceList />} />
             <Route path="workspace/:id" element={<WorkspaceDetail />} />
+            <Route path="workspace/:id/members" element={<Members />} />
 
             {/* Board */}
             <Route path="board/:id" element={<BoardView />} />
@@ -83,17 +79,14 @@ const AppRoutes = () => {
             {/* Tasks */}
             <Route path="my-tasks" element={<MyTasks />} />
 
+            {/* Chat */}
+            <Route path="chat" element={<ChatPage />} />
+
             {/* Search */}
             <Route path="search" element={<SearchResults />} />
 
             {/* Notifications */}
-            <Route
-              path="notifications"
-              element={<Notifications />}
-            />
-
-            {/* Members */}
-            <Route path="members" element={<Members />} />
+            <Route path="notifications" element={<Notifications />} />
 
             {/* Profile */}
             <Route path="profile" element={<Profile />} />
@@ -102,7 +95,7 @@ const AppRoutes = () => {
             <Route path="settings" element={<Settings />} />
           </Route>
 
-          {/* 404 */}
+          {/* 404 Not Found */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
