@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useChatStore } from '../../store/useChatStore';
-import { useSocket } from '../../hooks/useSocket';
+import { useSocket } from '../../pages/hooks/useSocket';
 import { useAuthStore } from '../../store/useAuthStore';
 import { formatters } from '../../utils/formatters';
 import Avatar from '../../components/common/Avatar';
