@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
 import {
   User, Lock, Briefcase, Bell, Palette, Shield, AlertTriangle,
   Camera, Monitor, Moon, Sun, ChevronRight, LogOut, Trash2, UserMinus,
+  ShieldCheck, Eye, EyeOff, AlertCircle, CheckCircle2
 } from 'lucide-react';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import Modal from '../../components/common/Modal';
 import Avatar from '../../components/common/Avatar';
+import Loader from '../../components/common/Loader';
 import { useAuthStore } from '../../store/useAuthStore';
 
 // ─── Toggle Switch ──────────────────────────────────────────────────────────
@@ -87,7 +88,7 @@ const NAV_ITEMS = [
 
 // ════════════════════════════════════════════════════════════════════════════
 const Settings = () => {
-  const { user } = useAuthStore();
+  const { user, changePassword, loading, error, clearError } = useAuthStore();
 
   // ── Active nav ──────────────────────────────────────────────────────────
   const [activeNav, setActiveNav] = useState('profile');
@@ -153,7 +154,49 @@ const Settings = () => {
     setTimeout(() => setToast(null), 2500);
   };
 
+  // ── Password change states ───────────────────────────────────────────────
+  const [successMsg, setSuccessMsg] = useState('');
+  const [mismatchError, setMismatchError] = useState('');
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false
+  });
+
   const handleSave = (section) => showToast(`${section} settings saved!`);
+
+  const togglePasswordVisibility = (field) => {
+    setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    
+    if (account.newPassword !== account.confirmPassword) {
+      setMismatchError('New passwords do not match. Please try again.');
+      return;
+    }
+
+    try {
+      await changePassword({ 
+        currentPassword: account.currentPassword, 
+        newPassword: account.newPassword 
+      });
+      setSuccessMsg('Password changed successfully!');
+      setAccount({ ...account, currentPassword: '', newPassword: '', confirmPassword: '' });
+      setTimeout(() => setSuccessMsg(''), 5000);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleAccountChange = (e) => {
+    const { name, value } = e.target;
+    setAccount({ ...account, [name]: value });
+    
+    if (error) clearError();
+    if (mismatchError) setMismatchError('');
+  };
 
   // ── Nav scroll ───────────────────────────────────────────────────────────
   const scrollTo = (id) => {
@@ -281,33 +324,107 @@ const Settings = () => {
 
               <div className="pt-2 border-t border-gray-100">
                 <p className="text-sm font-medium text-gray-800 mb-3">Change Password</p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <Input
-                    label="Current Password"
-                    type="password"
-                    value={account.currentPassword}
-                    onChange={(e) => setAccount({ ...account, currentPassword: e.target.value })}
-                    placeholder="••••••••"
-                  />
-                  <Input
-                    label="New Password"
-                    type="password"
-                    value={account.newPassword}
-                    onChange={(e) => setAccount({ ...account, newPassword: e.target.value })}
-                    placeholder="••••••••"
-                  />
-                  <Input
-                    label="Confirm Password"
-                    type="password"
-                    value={account.confirmPassword}
-                    onChange={(e) => setAccount({ ...account, confirmPassword: e.target.value })}
-                    placeholder="••••••••"
-                  />
-                </div>
+                <form onSubmit={handlePasswordChange} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="relative">
+                      <Input
+                        label="Current Password"
+                        name="currentPassword"
+                        type={showPasswords.current ? "text" : "password"}
+                        value={account.currentPassword}
+                        onChange={handleAccountChange}
+                        placeholder="••••••••"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => togglePasswordVisibility('current')}
+                        className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
+                        tabIndex={-1}
+                      >
+                        {showPasswords.current ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <Input
+                        label="New Password"
+                        name="newPassword"
+                        type={showPasswords.new ? "text" : "password"}
+                        value={account.newPassword}
+                        onChange={handleAccountChange}
+                        placeholder="••••••••"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => togglePasswordVisibility('new')}
+                        className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
+                        tabIndex={-1}
+                      >
+                        {showPasswords.new ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <Input
+                        label="Confirm Password"
+                        name="confirmPassword"
+                        type={showPasswords.confirm ? "text" : "password"}
+                        value={account.confirmPassword}
+                        onChange={handleAccountChange}
+                        placeholder="••••••••"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => togglePasswordVisibility('confirm')}
+                        className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
+                        tabIndex={-1}
+                      >
+                        {showPasswords.confirm ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {mismatchError && (
+                    <div className="flex items-center gap-2 text-sm text-red-700 bg-red-50 border border-red-100 p-3 rounded-lg">
+                      <AlertCircle size={18} className="flex-shrink-0" />
+                      <span>{mismatchError}</span>
+                    </div>
+                  )}
+
+                  {error && (
+                    <div className="flex items-center gap-2 text-sm text-red-700 bg-red-50 border border-red-100 p-3 rounded-lg">
+                      <AlertCircle size={18} className="flex-shrink-0" />
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  {successMsg && (
+                    <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 border border-green-100 p-3 rounded-lg">
+                      <CheckCircle2 size={18} className="flex-shrink-0" />
+                      <span>{successMsg}</span>
+                    </div>
+                  )}
+
+                  <div className="flex gap-3 justify-end">
+                    <Button onClick={() => handleSave('Account')}>Save Language & Timezone</Button>
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader size="sm" />
+                          <span>Updating...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Lock size={18} />
+                          <span>Update Password</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
               </div>
-            </div>
-            <div className="mt-4 flex justify-end">
-              <Button onClick={() => handleSave('Account')}>Save Changes</Button>
             </div>
           </SectionCard>
 
@@ -596,172 +713,6 @@ const Settings = () => {
         confirmLabel="Delete My Account"
         onConfirm={() => showToast('Account deletion requested.')}
       />
-=======
-import { useAuthStore } from '../../store/useAuthStore';
-import Button from '../../components/common/Button';
-import Input from '../../components/common/Input';
-import Loader from '../../components/common/Loader';
-// Icons ke liye lucide-react use kiya hai
-import { ShieldCheck, Lock, Eye, EyeOff, AlertCircle, CheckCircle2 } from 'lucide-react';
-
-const Settings = () => {
-  const { changePassword, loading, error, clearError } = useAuthStore();
-  const [formData, setFormData] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-  const [successMsg, setSuccessMsg] = useState('');
-  const [mismatchError, setMismatchError] = useState('');
-  
-  // Password visibility toggle states
-  const [showPasswords, setShowPasswords] = useState({
-    current: false,
-    new: false,
-    confirm: false
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    
-    // Clear errors when user starts typing
-    if (error) clearError();
-    if (mismatchError) setMismatchError('');
-  };
-
-  const togglePasswordVisibility = (field) => {
-    setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Inline validation instead of alert
-    if (formData.newPassword !== formData.confirmPassword) {
-      setMismatchError('New passwords do not match. Please try again.');
-      return;
-    }
-
-    try {
-      await changePassword({ 
-        currentPassword: formData.currentPassword, 
-        newPassword: formData.newPassword 
-      });
-      setSuccessMsg('Password changed successfully! Please login again.');
-      setFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-      setTimeout(() => setSuccessMsg(''), 5000);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // Reusable Password Input Wrapper with Toggle Icon
-  const PasswordField = ({ label, name, value }) => (
-    <div className="relative">
-      <Input
-        label={label}
-        name={name}
-        type={showPasswords[name === 'currentPassword' ? 'current' : name === 'newPassword' ? 'new' : 'confirm'] ? "text" : "password"}
-        value={value}
-        onChange={handleChange}
-        required
-        className="pr-12" // Space for the eye icon
-      />
-      <button
-        type="button"
-        onClick={() => togglePasswordVisibility(name === 'currentPassword' ? 'current' : name === 'newPassword' ? 'new' : 'confirm')}
-        className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
-        tabIndex={-1}
-      >
-        {showPasswords[name === 'currentPassword' ? 'current' : name === 'newPassword' ? 'new' : 'confirm'] ? (
-          <EyeOff size={20} />
-        ) : (
-          <Eye size={20} />
-        )}
-      </button>
-    </div>
-  );
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 py-10 px-4 sm:px-6">
-      <div className="max-w-2xl mx-auto">
-        
-        {/* Header Section */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-indigo-100 rounded-lg">
-              <ShieldCheck className="text-indigo-600" size={28} />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Security Settings</h1>
-          </div>
-          <p className="text-gray-500 ml-14">Manage your account security and update your password.</p>
-        </div>
-
-        {/* Main Card */}
-        <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100">
-          
-          <div className="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100">
-            <Lock className="text-gray-700" size={20} />
-            <h2 className="text-xl font-semibold text-gray-800">Change Password</h2>
-          </div>
-          
-          <form onSubmit={handleSubmit} className="space-y-5">
-            
-            {/* Password Fields */}
-            <PasswordField label="Current Password" name="currentPassword" value={formData.currentPassword} />
-            <PasswordField label="New Password" name="newPassword" value={formData.newPassword} />
-            <PasswordField label="Confirm New Password" name="confirmPassword" value={formData.confirmPassword} />
-
-            {/* Mismatch Error (Replaces alert) */}
-            {mismatchError && (
-              <div className="flex items-center gap-2 text-sm text-red-700 bg-red-50 border border-red-100 p-3 rounded-lg animate-in fade-in">
-                <AlertCircle size={18} className="flex-shrink-0" />
-                <span>{mismatchError}</span>
-              </div>
-            )}
-
-            {/* API Error */}
-            {error && (
-              <div className="flex items-center gap-2 text-sm text-red-700 bg-red-50 border border-red-100 p-3 rounded-lg">
-                <AlertCircle size={18} className="flex-shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            {/* Success Message */}
-            {successMsg && (
-              <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 border border-green-100 p-3 rounded-lg">
-                <CheckCircle2 size={18} className="flex-shrink-0" />
-                <span>{successMsg}</span>
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <div className="pt-4">
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg shadow-indigo-200/50 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
-              >
-                {loading ? (
-                  <>
-                    <Loader size="sm" />
-                    <span>Updating...</span>
-                  </>
-                ) : (
-                  <>
-                    <Lock size={18} />
-                    <span>Update Password</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
-        </div>
-
-        {/* Footer tip */}
-        <p className="text-center text-xs text-gray-400 mt-6">
-          Make sure to use a strong password with at least 8 characters, including letters and numbers.
-        </p>
-      </div>
->>>>>>> a728168a44bdac3dd5079fac37d090269eff757b
     </div>
   );
 };
