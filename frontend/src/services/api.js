@@ -1,17 +1,19 @@
 import axios from 'axios';
-import { config } from '../config/env';
+import env from '../config/env';
+import { storage, STORAGE_KEYS } from '../utils/storage';
 
+// Create axios instance
 const api = axios.create({
-  baseURL: config.apiUrl,
+  baseURL: env.API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor to add token
+// Request interceptor - Add auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('collab_token');
+    const token = storage.getItem(STORAGE_KEYS.TOKEN);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -22,13 +24,15 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
+// Response interceptor - Handle errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('collab_token');
-      localStorage.removeItem('collab_user');
+      // Clear auth data
+      storage.removeItem(STORAGE_KEYS.TOKEN);
+      storage.removeItem(STORAGE_KEYS.USER);
+      // Redirect to login
       window.location.href = '/login';
     }
     return Promise.reject(error);

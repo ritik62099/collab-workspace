@@ -25,6 +25,8 @@ import cardRoutes from './routes/cardRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
+import chatRoutes from './routes/chatRoutes.js'; 
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 // Socket
 import { initializeSocket } from './socket/index.js';
@@ -94,6 +96,8 @@ app.use('/api/cards', cardRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/chat', chatRoutes); 
+app.use('/api/dashboard', dashboardRoutes);
 
 // 404 handler
 app.use(notFound);

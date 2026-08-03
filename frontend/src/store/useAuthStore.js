@@ -1,111 +1,72 @@
 import { create } from 'zustand';
 import { authService } from '../services/authService';
-import { config } from '../config/env';
+import { storage, STORAGE_KEYS } from '../utils/storage';
 
-const useAuthStore = create((set) => ({
-  user: null,
-  token: null,
-  isAuthenticated: false,
-  isLoading: true,
+export const useAuthStore = create((set) => ({
+  user: storage.getItem(STORAGE_KEYS.USER) || null,
+  token: storage.getItem(STORAGE_KEYS.TOKEN) || null,
+  isAuthenticated: !!storage.getItem(STORAGE_KEYS.TOKEN),
+  loading: false,
   error: null,
-
-  // Initialize auth state from localStorage
-  initAuth: () => {
-    try {
-      const token = localStorage.getItem(config.tokenKey);
-      const user = localStorage.getItem('collab_user');
-      
-      if (token && user) {
-        set({
-          token,
-          user: JSON.parse(user),
-          isAuthenticated: true,
-          isLoading: false,
-        });
-      } else {
-        set({ isLoading: false });
-      }
-    } catch (error) {
-      console.error('Auth initialization error:', error);
-      set({ isLoading: false });
-    }
-  },
 
   // Login
   login: async (credentials) => {
+    set({ loading: true, error: null });
     try {
-      set({ isLoading: true, error: null });
       const data = await authService.login(credentials);
-      
-      localStorage.setItem(config.tokenKey, data.token);
-      localStorage.setItem('collab_user', JSON.stringify(data.user));
-      
-      set({
-        user: data.user,
-        token: data.token,
-        isAuthenticated: true,
-        isLoading: false,
-        error: null,
+      set({ 
+        user: data.user, 
+        token: data.token, 
+        isAuthenticated: true, 
+        loading: false 
       });
-      
-      return { success: true };
+      return data;
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Login failed';
-      set({ error: errorMessage, isLoading: false });
-      return { success: false, error: errorMessage };
+      set({ 
+        error: error.response?.data?.message || 'Login failed', 
+        loading: false 
+      });
+      throw error;
     }
   },
 
   // Register
   register: async (userData) => {
+    set({ loading: true, error: null });
     try {
-      set({ isLoading: true, error: null });
       const data = await authService.register(userData);
-      
-      localStorage.setItem(config.tokenKey, data.token);
-      localStorage.setItem('collab_user', JSON.stringify(data.user));
-      
-      set({
-        user: data.user,
-        token: data.token,
-        isAuthenticated: true,
-        isLoading: false,
-        error: null,
+      set({ 
+        user: data.user, 
+        token: data.token, 
+        isAuthenticated: true, 
+        loading: false 
       });
-      
-      return { success: true };
+      return data;
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Registration failed';
-      set({ error: errorMessage, isLoading: false });
-      return { success: false, error: errorMessage };
+      set({ 
+        error: error.response?.data?.message || 'Registration failed', 
+        loading: false 
+      });
+      throw error;
     }
   },
 
   // Logout
-  logout: () => {
-    localStorage.removeItem(config.tokenKey);
-    localStorage.removeItem('collab_user');
-    set({
-      user: null,
-      token: null,
-      isAuthenticated: false,
-      error: null,
+  logout: async () => {
+    await authService.logout();
+    set({ 
+      user: null, 
+      token: null, 
+      isAuthenticated: false 
     });
   },
 
-  // Fetch current user
-  fetchUser: async () => {
-    try {
-      const data = await authService.getMe();
-      set({ user: data.user });
-      localStorage.setItem('collab_user', JSON.stringify(data.user));
-    } catch (error) {
-      console.error('Fetch user error:', error);
-    }
+  // Update user
+  updateUser: (user) => {
+    set({ user });
+    storage.setItem(STORAGE_KEYS.USER, user);
   },
 
   // Clear error
   clearError: () => set({ error: null }),
 }));
-
-export default useAuthStore;

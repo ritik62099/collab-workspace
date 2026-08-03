@@ -1,20 +1,31 @@
 import User from '../models/User.js';
+import Workspace from '../models/Workspace.js'; // ✅ Import karo
 import { generateToken } from '../utils/jwt.js';
 import { AppError } from '../utils/errorHandler.js';
 
 export const registerUser = async (userData) => {
-  const { name, email, password } = userData;
+  const { name, email, password, workspaceId, inviteCode } = userData; // ✅ Naye params
 
-  // Check if user already exists
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     throw new AppError('Email already registered', 409);
   }
 
-  // Create user (password will be hashed by pre-save hook)
   const user = await User.create({ name, email, password });
 
-  // Generate token
+  // ✅ Agar invite details hain, toh user ko workspace mein add karo
+  if (workspaceId && inviteCode) {
+    const workspace = await Workspace.findOne({ 
+      _id: workspaceId, 
+      inviteCode: inviteCode 
+    });
+
+    if (workspace) {
+      workspace.members.push({ user: user._id, role: 'member' });
+      await workspace.save();
+    }
+  }
+
   const token = generateToken(user._id);
 
   return {
@@ -60,3 +71,5 @@ export const loginUser = async (email, password) => {
     token,
   };
 };
+
+

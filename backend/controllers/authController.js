@@ -2,13 +2,12 @@ import { registerUser, loginUser } from '../services/authService.js';
 import User from '../models/User.js';
 import { AppError } from '../utils/errorHandler.js';
 
-// @desc    Register new user
-// @route   POST /api/auth/register
 export const register = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    // ✅ workspaceId aur inviteCode ko bhi extract karo
+    const { name, email, password, workspaceId, inviteCode } = req.body;
 
-    const result = await registerUser({ name, email, password });
+    const result = await registerUser({ name, email, password, workspaceId, inviteCode });
 
     res.status(201).json({
       success: true,
@@ -72,25 +71,29 @@ export const updateProfile = async (req, res, next) => {
   }
 };
 
-// @desc    Change password
+
+
+
+// @desc    Change Password
 // @route   PUT /api/auth/change-password
 export const changePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
-
     const user = await User.findById(req.user._id).select('+password');
+
+    if (!user) throw new AppError('User not found', 404);
+
+    // Check current password
     const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) throw new AppError('Current password is incorrect', 401);
 
-    if (!isMatch) {
-      throw new AppError('Current password is incorrect', 401);
-    }
-
+    // Update password
     user.password = newPassword;
-    await user.save();
+    await user.save(); // pre('save') hook automatically hashes it
 
     res.status(200).json({
       success: true,
-      message: 'Password changed successfully',
+      message: 'Password updated successfully',
     });
   } catch (error) {
     next(error);

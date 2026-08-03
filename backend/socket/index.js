@@ -5,6 +5,7 @@ import { registerCardEvents } from './cardEvents.js';
 import { registerCommentEvents } from './commentEvents.js';
 import { registerPresenceEvents } from './presenceEvents.js';
 import { logger } from '../utils/logger.js';
+import { registerChatEvents } from './chatEvents.js';
 
 export const initializeSocket = (io) => {
   // Authentication middleware for sockets
@@ -46,6 +47,29 @@ export const initializeSocket = (io) => {
     registerCardEvents(io, socket);
     registerCommentEvents(io, socket);
     registerPresenceEvents(io, socket);
+
+    socket.on('disconnect', (reason) => {
+      logger.info(`User disconnected: ${socket.user.name} - ${reason}`);
+    });
+  });
+
+  
+
+  io.on('connection', (socket) => {
+    logger.success(`User connected: ${socket.user.name} (${socket.id})`);
+
+    // Join user's personal room for notifications
+    socket.join(`user-${socket.user._id}`);
+    
+    // ✅ Join chat room
+    socket.join(`chat-${socket.user._id}`);
+
+    // Register all event handlers
+    registerBoardEvents(io, socket);
+    registerCardEvents(io, socket);
+    registerCommentEvents(io, socket);
+    registerPresenceEvents(io, socket);
+    registerChatEvents(io, socket); // ✅ Ye line add karo
 
     socket.on('disconnect', (reason) => {
       logger.info(`User disconnected: ${socket.user.name} - ${reason}`);
