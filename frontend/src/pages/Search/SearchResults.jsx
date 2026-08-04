@@ -1,5 +1,8 @@
-const SearchList = () => {
-  return <h1>SearchList Page</h1>;
+import React from 'react';
+import Search from './Search';
+
+const SearchResults = () => {
+  return <Search />;
 };
 
-export default SearchList;
+export default SearchResults;
