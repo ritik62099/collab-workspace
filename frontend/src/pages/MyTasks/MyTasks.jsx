@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { cardService } from '../../services/cardService';
 import { formatters } from '../../utils/formatters';
 import Loader from '../../components/common/Loader';
-// Input aur Button components ko aap apne hisaab se adjust kar sakte hain, 
-// lekin yahan native elements use kiye gaye hain taaki icons ke saath perfect styling ho sake.
+
 
 const MyTasks = () => {
   const navigate = useNavigate();

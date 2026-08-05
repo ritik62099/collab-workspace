@@ -4,7 +4,7 @@ import { generateToken } from '../utils/jwt.js';
 import { AppError } from '../utils/errorHandler.js';
 
 export const registerUser = async (userData) => {
-  const { name, email, password, workspaceId, inviteCode } = userData; // ✅ Naye params
+  const { name, email, password, workspaceId, inviteCode } = userData; 
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -13,7 +13,6 @@ export const registerUser = async (userData) => {
 
   const user = await User.create({ name, email, password });
 
-  // ✅ Agar invite details hain, toh user ko workspace mein add karo
   if (workspaceId && inviteCode) {
     const workspace = await Workspace.findOne({ 
       _id: workspaceId, 
