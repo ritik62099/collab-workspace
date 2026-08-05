@@ -2,7 +2,6 @@ import Comment from '../models/Comment.js';
 import Card from '../models/Card.js';
 import { AppError } from '../utils/errorHandler.js';
 
-// @desc    Add comment
 // @route   POST /api/cards/:cardId/comments
 export const addComment = async (req, res, next) => {
   try {

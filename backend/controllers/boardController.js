@@ -4,7 +4,6 @@ import Workspace from '../models/Workspace.js';
 import { AppError } from '../utils/errorHandler.js';
 
 // @desc    Create board
-// @route   POST /api/boards
 export const createBoard = async (req, res, next) => {
   try {
     const { title, description, workspaceId, background } = req.body;
