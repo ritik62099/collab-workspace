@@ -87,7 +87,7 @@ const CardDetailsModal = ({ card, listId, boardId, onClose }) => {
           {/* Card Title */}
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">{card.title}</h2>
-            <p className="text-sm text-gray-500">in list <span className="font-medium text-gray-700">TODO: Get List Name</span></p>
+            <p className="text-sm text-gray-500">in list <span className="font-medium text-gray-700">{card.list?.title || 'Unknown List'}</span></p>
           </div>
 
           {/* Comments Section */}
