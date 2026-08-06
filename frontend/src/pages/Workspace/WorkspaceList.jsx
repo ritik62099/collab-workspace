@@ -96,29 +96,23 @@ const WorkspaceList = () => {
     <div>
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-end justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Workspaces</h1>
-            <p className="mt-1 text-gray-600">Manage your collaborative workspaces</p>
+            <h1 className="text-4xl font-bold text-gray-900 tracking-tight">Workspaces</h1>
+            <p className="mt-3 text-base text-gray-600">Manage and collaborate across all your workspaces</p>
           </div>
-          <div className="flex space-x-3">
+          <div className="flex gap-3">
             <Button variant="outline" onClick={() => setShowJoinModal(true)}>
-              <svg className="inline w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
               Join Workspace
             </Button>
             <Button variant="primary" onClick={() => setShowCreateModal(true)}>
-              <svg className="inline w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
               Create Workspace
             </Button>
           </div>
         </div>
 
         {error && (
-          <div className="px-4 py-3 text-sm text-red-600 border border-red-200 rounded-lg bg-red-50">
+          <div className="px-4 py-3 text-sm text-red-700 border border-red-200 rounded-lg bg-red-50">
             {error}
           </div>
         )}
@@ -126,21 +120,23 @@ const WorkspaceList = () => {
 
       {/* Workspaces Grid */}
       {workspaces.length === 0 ? (
-        <div className="p-12 text-center bg-white shadow-lg rounded-2xl">
-          <div className="flex items-center justify-center w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-orange-100 to-green-100">
-            <svg className="w-12 h-12 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-          </div>
-          <h3 className="mb-2 text-xl font-bold text-gray-900">No Workspaces Yet</h3>
-          <p className="mb-6 text-gray-600">Create your first workspace or join an existing one to get started.</p>
-          <div className="flex justify-center space-x-3">
-            <Button variant="outline" onClick={() => setShowJoinModal(true)}>
-              Join Workspace
-            </Button>
-            <Button variant="primary" onClick={() => setShowCreateModal(true)}>
-              Create Workspace
-            </Button>
+        <div className="flex items-center justify-center py-20 bg-white border border-gray-200 rounded-xl">
+          <div className="text-center max-w-sm">
+            <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-gray-100">
+              <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">No workspaces yet</h3>
+            <p className="text-sm text-gray-600 mb-6">Create your first workspace to start collaborating with your team</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button variant="outline" onClick={() => setShowJoinModal(true)}>
+                Join Workspace
+              </Button>
+              <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+                Create Workspace
+              </Button>
+            </div>
           </div>
         </div>
       ) : (

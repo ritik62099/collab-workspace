@@ -1,35 +1,40 @@
 import React from "react";
-import { ArrowRight } from "lucide-react";
+import { Activity } from "lucide-react";
 import { formatters } from "../../utils/formatters";
 
 const RecentActivity = ({ activities = [] }) => {
   return (
-    <div className="p-6 bg-white border border-gray-200 shadow-sm rounded-2xl">
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
-        <button className="flex items-center gap-1 text-sm font-medium text-orange-600 hover:text-orange-700">
-          View All <ArrowRight size={16} />
-        </button>
+    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="px-6 py-4 border-b border-gray-100">
+        <h2 className="text-base font-semibold text-gray-900">Recent Activity</h2>
       </div>
 
       {activities.length === 0 ? (
-        <p className="text-sm text-gray-500 text-center py-4">No recent activity</p>
+        <div className="px-6 py-12 text-center">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 mb-3">
+            <Activity size={20} className="text-gray-400" />
+          </div>
+          <p className="text-sm font-medium text-gray-900 mb-1">No recent activity</p>
+          <p className="text-sm text-gray-500">Activity from your workspaces will appear here</p>
+        </div>
       ) : (
-        <div className="space-y-5">
+        <div className="divide-y divide-gray-100">
           {activities.map((activity) => (
-            <div key={activity.id} className="flex items-start gap-3">
-              <div className="flex items-center justify-center w-10 h-10 font-semibold text-orange-600 bg-orange-100 rounded-full">
-                {activity.user.charAt(0)}
-              </div>
-              <div className="flex-1">
-                <p className="text-sm text-gray-700">
-                  <span className="font-semibold">{activity.user}</span>{" "}
-                  {activity.action}{" "}
-                  <span className="font-medium text-gray-900">{activity.target}</span>
-                </p>
-                <p className="mt-1 text-xs text-gray-400">
-                  {formatters.formatRelativeTime(activity.time)}
-                </p>
+            <div key={activity.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
+              <div className="flex items-start gap-3">
+                <div className="flex items-center justify-center w-9 h-9 font-medium text-sm text-orange-700 bg-orange-100 rounded-full flex-shrink-0">
+                  {activity.user.charAt(0)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    <span className="font-semibold text-gray-900">{activity.user}</span>
+                    {" "}{activity.action}{" "}
+                    <span className="font-medium text-gray-900">{activity.target}</span>
+                  </p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    {formatters.formatRelativeTime(activity.time)}
+                  </p>
+                </div>
               </div>
             </div>
           ))}

@@ -62,24 +62,29 @@ const Dashboard = () => {
   if (!data) return null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <DashboardHeader user={user} />
       <StatsCards dashboard={data.stats} />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-1">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <div className="lg:col-span-5">
           <RecentActivity activities={data.recentActivity} />
         </div>
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-7">
           <MyAssignedTasks tasks={data.upcomingDeadlines.slice(0, 4)} /> 
-          {/* Using upcoming deadlines as assigned tasks for now, or you can pass all myCards */}
         </div>
       </div>
       
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <WorkspaceOverview workspaces={data.workspaces} />
-        <TaskStatusChart data={data.taskStatus} />
-        <UpcomingDeadlines deadlines={data.upcomingDeadlines} />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <div className="lg:col-span-5">
+          <WorkspaceOverview workspaces={data.workspaces} />
+        </div>
+        <div className="lg:col-span-4">
+          <TaskStatusChart data={data.taskStatus} />
+        </div>
+        <div className="lg:col-span-3">
+          <UpcomingDeadlines deadlines={data.upcomingDeadlines} />
+        </div>
       </div>
     </div>
   );
