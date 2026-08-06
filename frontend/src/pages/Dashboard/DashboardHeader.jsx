@@ -1,26 +1,17 @@
 import React from "react";
 
-const DashboardHeader = ( { user } ) => {
-
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-
-    if (hour < 12) return "Good Morning";
-    if (hour < 17) return "Good Afternoon";
-    return "Good Evening";
-  };
-
+const DashboardHeader = ({ user }) => {
   return (
-    <div className="flex items-center justify-between mb-8">
-      <div>
-         <h1 className="text-3xl font-bold text-gray-900">
-        {getGreeting()}, {user?.name || "User"}! 👋
-      </h1>
-
-        <p className="mt-2 text-gray-500">
-          Here's what's happening with your projects today.
-        </p>
+    <div className="mb-10">
+      <div className="flex items-end justify-between">
+        <div>
+          <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
+            Dashboard
+          </h1>
+          <p className="mt-3 text-base text-gray-600 max-w-2xl">
+            Overview of your workspaces, tasks, and recent activity
+          </p>
+        </div>
       </div>
     </div>
   );
