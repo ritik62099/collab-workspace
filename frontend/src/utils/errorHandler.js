@@ -27,17 +27,17 @@ export const errorHandler = {
     return errorHandler.handleApiError(error);
   },
 
-  // Show error notification (to be implemented with toast)
+  // Show error notification
   showError: (message) => {
     console.error('Error:', message);
-    // TODO: Implement toast notification
-    alert(message);
+    // Toast will be used via useToast hook in components
+    // Fallback to console for now
   },
 
   // Show success notification
   showSuccess: (message) => {
     console.log('Success:', message);
-    // TODO: Implement toast notification
-    alert(message);
+    // Toast will be used via useToast hook in components
+    // Fallback to console for now
   },
 };
