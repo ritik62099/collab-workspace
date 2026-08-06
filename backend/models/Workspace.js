@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 
+
+
+
 const workspaceSchema = new mongoose.Schema(
   {
     name: { type: String, required: [true, 'Workspace name is required'], trim: true, maxlength: 100 },
